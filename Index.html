@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Guía de Documentación · AdigitalOPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0d0f14;
+    --surface:  #13161e;
+    --border:   #1f2330;
+    --text:     #e8eaf0;
+    --muted:    #6b7280;
+    --c1:       #f59e0b;
+    --c2:       #ef4444;
+    --c3:       #22d3ee;
+    --c1-dim:   #f59e0b20;
+    --c2-dim:   #ef444420;
+    --c3-dim:   #22d3ee20;
+  }
+
+  /* ── Reset iframe-friendly ─────────────────────────── */
+  html {
+    font-size: 15px;
+    scroll-behavior: smooth;
+    /* prevent double scrollbars inside iframe */
+    overflow-x: hidden;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    /* compact vertical padding — clave para embed */
+    padding: 28px 18px 36px;
+    overflow-x: hidden;
+  }
+
+  /* subtle background pattern — position absolute, no fixed */
+  body::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── WRAPPER — 100% ancho, sin max-width rígido ─────── */
+  .wrap {
+    position: relative; z-index: 1;
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER compacto ───────────────────────────────── */
+  header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 12px;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+  }
+  header h1 em { font-style: normal; color: var(--c1); }
+  header p {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── PROGRESS BAR de secciones ─────────────────────── */
+  .progress-bar {
+    display: flex; gap: 6px;
+    margin-bottom: 24px;
+  }
+  .pb-item {
+    flex: 1; height: 3px; border-radius: 999px;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+  .pb-item:hover { opacity: 1; }
+  .pb-c1 { background: var(--c1); }
+  .pb-c2 { background: var(--c2); }
+  .pb-c3 { background: var(--c3); }
+
+  /* ── SECTION CARD ──────────────────────────────────── */
+  .card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    /* padding izquierdo ampliado para la barra de color */
+    padding: 24px 24px 24px 32px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  }
+  .card::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 4px;
+    border-radius: 16px 0 0 16px;
+  }
+  .card::after {
+    content: ''; position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    opacity: 0.3;
+  }
+  .card-c1::before { background: var(--c1); }
+  .card-c1::after  { background: var(--c1); }
+  .card-c2::before { background: var(--c2); }
+  .card-c2::after  { background: var(--c2); }
+  .card-c3::before { background: var(--c3); }
+  .card-c3::after  { background: var(--c3); }
+
+  /* ── CARD HEADER — horizontal compacto ─────────────── */
+  .card-top {
+    display: flex; align-items: center;
+    gap: 14px; margin-bottom: 18px;
+  }
+  .icon-wrap {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+  }
+  .card-c1 .icon-wrap { background: var(--c1-dim); }
+  .card-c2 .icon-wrap { background: var(--c2-dim); }
+  .card-c3 .icon-wrap { background: var(--c3-dim); }
+
+  .card-meta { flex: 1; min-width: 0; }
+  .card-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.57rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem; font-weight: 800;
+    letter-spacing: -0.02em; line-height: 1.1;
+  }
+  .card-c1 .card-title { color: var(--c1); }
+  .card-c2 .card-title { color: var(--c2); }
+  .card-c3 .card-title { color: var(--c3); }
+  .card-question {
+    font-size: 0.75rem; color: var(--muted);
+    font-style: italic; margin-top: 1px;
+  }
+
+  /* número de sección flotante */
+  .card-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem; font-weight: 800;
+    line-height: 1; opacity: 0.06;
+    letter-spacing: -0.05em;
+    position: absolute; right: 20px; top: 14px;
+    pointer-events: none;
+  }
+
+  /* ── TIPS: 2 columnas fijas — mejor en iframe ───────── */
+  .tips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    position: relative; z-index: 1;
+  }
+  @media (max-width: 480px) {
+    .tips { grid-template-columns: 1fr; }
+  }
+
+  .tip {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex; gap: 10px; align-items: flex-start;
+    transition: background 0.2s;
+  }
+  .tip:hover { background: rgba(255,255,255,0.05); }
+
+  .tip-num {
+    flex-shrink: 0;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.6rem; font-weight: 700;
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .card-c1 .tip-num { background: var(--c1-dim); color: var(--c1); }
+  .card-c2 .tip-num { background: var(--c2-dim); color: var(--c2); }
+  .card-c3 .tip-num { background: var(--c3-dim); color: var(--c3); }
+
+  .tip-text {
+    font-size: 0.78rem; line-height: 1.5;
+    color: #b8bcc8;
+  }
+  .tip-text strong {
+    display: block;
+    font-weight: 500; color: var(--text);
+    margin-bottom: 2px; font-size: 0.8rem;
+  }
+
+  /* ── ALERT ─────────────────────────────────────────── */
+  .card-alert {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.75rem; font-weight: 500;
+    position: relative; z-index: 1;
+  }
+  .card-c1 .card-alert { background: var(--c1-dim); color: #fcd34d; border: 1px solid #f59e0b30; }
+  .card-c2 .card-alert { background: var(--c2-dim); color: #fca5a5; border: 1px solid #ef444430; }
+  .card-c3 .card-alert { background: var(--c3-dim); color: #67e8f9; border: 1px solid #22d3ee30; }
+
+  /* ── FOOTER mínimo ─────────────────────────────────── */
+  footer {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.58rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px; border: 1px solid;
+  }
+  .chip-c1 { border-color: #f59e0b50; color: var(--c1); }
+  .chip-c2 { border-color: #ef444450; color: var(--c2); }
+  .chip-c3 { border-color: #22d3ee50; color: var(--c3); }
+  footer small {
+    font-size: 0.65rem; color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── ANIMACIONES de entrada ────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  header { animation: fadeUp 0.4s ease both; }
+  .progress-bar { animation: fadeUp 0.4s ease 0.08s both; }
+  .card { animation: fadeUp 0.45s ease both; }
+  .card:nth-child(1) { animation-delay: 0.12s; }
+  .card:nth-child(2) { animation-delay: 0.22s; }
+  .card:nth-child(3) { animation-delay: 0.32s; }
+  footer { animation: fadeUp 0.4s ease 0.42s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="badge">📋 Área Funcional TI · GCH</div>
+    <h1 style="margin-top:10px">Cómo llenar cada <em>sección clave</em></h1>
+    <p>Tips para redactar con claridad y precisión cada apartado de tu documento de proyecto.</p>
+  </header>
+
+  <!-- PROGRESS BAR decorativa -->
+  <div class="progress-bar">
+    <div class="pb-item pb-c1"></div>
+    <div class="pb-item pb-c2"></div>
+    <div class="pb-item pb-c3"></div>
+  </div>
+
+  <!-- ══ CARD 1 · CONTEXTO ══ -->
+  <div class="card card-c1">
+    <div class="card-num">01</div>
+    <div class="card-top">
+      <div class="icon-wrap">🧭</div>
+      <div class="card-meta">
+        <div class="card-label">Sección 01</div>
+        <div class="card-title">Contexto General</div>
+        <div class="card-question">¿Qué debe comunicar este apartado?</div>
+      </div>
+    </div>
+    <div class="tips">
+      <div class="tip">
+        <div class="tip-num">01</div>
+        <div class="tip-text"><strong>Describe el negocio</strong>Qué hace la organización, a quién atiende y qué necesidad del mercado cubre.</div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">02</div>
+        <div class="tip-text"><strong>Flujo de alto nivel</strong>El proceso de principio a fin en términos generales. Sin tareas ni detalle operativo.</div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">03</div>
+        <div class="tip-text"><strong>Actores clave</strong>Quiénes participan y cuál es su rol general dentro del proceso.</div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">04</div>
+        <div class="tip-text"><strong>Cómo opera hoy</strong>Interacción entre personas, áreas o sistemas para entender el funcionamiento actual.</div>
+      </div>
+    </div>
+    <div class="card-alert">
+      <span>✅</span>
+      <span>Enfócate en el negocio. No en el proyecto ni en la solución.</span>
+    </div>
+  </div>
+
+  <!-- ══ CARD 2 · NECESIDAD ══ -->
+  <div class="card card-c2">
+    <div class="card-num">02</div>
+    <div class="card-top">
+      <div class="icon-wrap">⚠️</div>
+      <div class="card-meta">
+        <div class="card-label">Sección 02</div>
+        <div class="card-title">Necesidad</div>
+        <div class="card-question">¿Qué debes describir en este apartado?</div>
+      </div>
+    </div>
+    <div class="tips">
+      <div class="tip">
+        <div class="tip-num">01</div>
+        <div class="tip-text"><strong>El problema real</strong>Qué no funciona o qué es ineficiente en el proceso actual. Sé específico.</div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">02</div>
+        <div class="tip-text"><strong>La brecha</strong>Contrasta la situación actual con lo que el negocio realmente necesita lograr.</div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">03</div>
+        <div class="tip-text"><strong>El impacto</strong>Consecuencias concretas: en clientes, costos, tiempos, riesgos o resultados esperados.</div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">04</div>
+        <div class="tip-text"><strong>Sin soluciones aún</strong>Este apartado describe el problema. No cómo resolverlo.</div>
+      </div>
+    </div>
+    <div class="card-alert">
+      <span>✅</span>
+      <span>La necesidad debe ser real, medible y relevante para el negocio.</span>
+    </div>
+  </div>
+
+  <!-- ══ CARD 3 · PROPÓSITO ══ -->
+  <div class="card card-c3">
+    <div class="card-num">03</div>
+    <div class="card-top">
+      <div class="icon-wrap">🎯</div>
+      <div class="card-meta">
+        <div class="card-label">Sección 03</div>
+        <div class="card-title">Propósito</div>
+        <div class="card-question">¿Qué debe quedar claro al leer este apartado?</div>
+      </div>
+    </div>
+    <div class="tips">
+      <div class="tip">
+        <div class="tip-num">01</div>
+        <div class="tip-text"><strong>El resultado esperado</strong>Define claramente qué se quiere lograr al finalizar el proyecto.</div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">02</div>
+        <div class="tip-text"><strong>Relación directa</strong>Conecta el propósito con la necesidad identificada. Deben estar alineados.</div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">03</div>
+        <div class="tip-text"><strong>Beneficio para el negocio</strong>El valor que genera, no la herramienta o tecnología que se usará.</div>
+      </div>
+      <div class="tip">
+        <div class="tip-num">04</div>
+        <div class="tip-text"><strong>Breve y concreto</strong>Una redacción clara en una sola idea es mejor que un párrafo extenso y ambiguo.</div>
+      </div>
+    </div>
+    <div class="card-alert">
+      <span>✅</span>
+      <span>El propósito responde al <em>para qué</em> del proyecto, no al <em>cómo</em>.</span>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-chips">
+      <span class="chip chip-c1">🧭 Contexto</span>
+      <span class="chip chip-c2">⚠️ Necesidad</span>
+      <span class="chip chip-c3">🎯 Propósito</span>
+    </div>
+    <small>Área Funcional TI · Grupo Charly</small>
+  </footer>
+
+</div>
+</body>
+</html>
